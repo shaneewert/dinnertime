@@ -1,6 +1,6 @@
-const { HTTP } = require('http-call');
-const DomParser = require('dom-parser');
-var decode = require('unescape');
+import { HTTP } from 'http-call';
+import DomParser from 'dom-parser';
+import decode from 'unescape';
 
 export default async function parseRecipe(req, res) {
   const maybeUrl = req.query.url;
