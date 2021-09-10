@@ -7,8 +7,12 @@ export default async function parseRecipe(req, res) {
     const maybeUrl = req.query.url;
     const parser = new DomParser();
 
-    const { body: html } = await HTTP.get(maybeUrl);
-    const dom = parser.parseFromString(html);
+    try {
+      const { body: html } = await HTTP.get(maybeUrl);
+      const dom = parser.parseFromString(html);
+    } catch (e) {
+      console.error('unable to fetch ' + maybeUrl, e);
+    }
 
     const metaTags = dom.getElementsByTagName('meta');
     const ogTitle = metaTags.find((tag) => tag.getAttribute('property') == 'og:title');
