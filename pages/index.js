@@ -1,96 +1,46 @@
-import Layout from '../components/layout';
-import LoadingOverlay from '../components/loading-overlay';
-import SelectRecipeModal from '../components/select-recipe-modal';
+import BottomNav from '../components/bottom-nav';
+import RecipesPage from '../components/recipes-page';
+import CalendarPage from '../components/calendar-page';
+import Header from '../components/header';
+import Head from 'next/head';
 import dayjs from 'dayjs';
-import DateRow from '../components/date-row';
 import { PrismaClient } from '@prisma/client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 const prisma = new PrismaClient();
 
 const DAY = 1000 * 60 * 60 * 24;
 
-export default function Calendar({ recipes, dinners }) {
-  const router = useRouter();
+export default function Home({ recipes, dinners }) {
+  const [currentRoute, setCurrentRoute] = useState('calendar');
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  useEffect(() => setIsLoading(false), [recipes, dinners]);
-
-  const onCloseModal = () => {
-    setShowModal(false);
+  const routeToTitles = {
+    calendar: 'Calendar',
+    recipes: 'Recipes',
   };
 
-  const onRecipeSelected = (recipe) => {
-    // selectedDate is set in onDateClick
-    setIsLoading(true);
-    fetch('/api/dinners', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        recipe: recipe,
-        date: selectedDate.format(),
-      }),
-    }).then(() => router.replace(router.asPath));
-  };
-
-  const onDinnerDeleted = (dinner) => {
-    setIsLoading(true);
-    fetch('/api/dinners/' + dinner.id, {
-      method: 'DELETE',
-    }).then(() => router.replace(router.asPath));
-  }
-
-  const onDateClick = (dayJsDate, recipe) => {
-    if (recipe) {
-      window.open(recipe.url, recipe.title);
-    } else {
-      setSelectedDate(dayJsDate);
-      setShowModal(true);
+  const page = () => {
+    switch (currentRoute) {
+      case 'calendar':
+        return <CalendarPage recipes={recipes} dinners={dinners} />;
+      case 'recipes':
+        return <RecipesPage recipes={recipes} />;
     }
   };
 
-  const beginningOfWeek = dayjs().startOf('week');
-  const oneWeekLater = dayjs().endOf('week').add(1, 'week');
-
-  // dinners are represented as a map from { YYYY-DD-MM -> dinner }
-  const formattedDateToDinnerMap = {};
-  dinners.forEach((dinner) => {
-    dinner.recipe = recipes.find((recipe) => recipe.id === dinner.recipeId);
-    formattedDateToDinnerMap[dinner.dinnerAt] = dinner;
-  });
-
-  // a day in the list consists of a date and an optional recipe
-  let days = [];
-  let currentDate = beginningOfWeek;
-  while (currentDate < oneWeekLater) {
-    const day = { date: currentDate };
-    const formattedDate = currentDate.format('YYYY-MM-DD');
-    day.dinner = formattedDateToDinnerMap[formattedDate];
-
-    days.push(day);
-    currentDate = currentDate.add(1, 'day');
-  }
-
   return (
-    <Layout currentRoute="calendar">
-      {showModal && <SelectRecipeModal onClose={onCloseModal} onSelectRecipe={onRecipeSelected} recipes={recipes} />}
-      {isLoading && <LoadingOverlay />}
-      {days.map((day) => {
-        const key = day.date.startOf('day').toString();
-        return (
-          <DateRow
-            key={key}
-            dayJsDate={day.date}
-            dinner={day.dinner}
-            onClick={onDateClick}
-            onDinnerDeleted={onDinnerDeleted}
-          />
-        );
-      })}
-    </Layout>
+    <div className="flex flex-col h-screen">
+      <Head>
+        <title>Dinner Time</title>
+        <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <meta name="apple-mobile-web-app-capable" content="yes"></meta>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"></meta>
+      </Head>
+
+      <Header title={routeToTitles[currentRoute]} />
+      <main className="flex-1 overflow-y-auto bg-gray-200">{page()}</main>
+      <BottomNav currentRoute={currentRoute} onRouteChange={setCurrentRoute} />
+    </div>
   );
 }
 

@@ -1,20 +1,14 @@
-import { useRouter } from 'next/router';
-
-export default function BottomNav({ currentRoute }) {
-  const router = useRouter();
-
+export default function BottomNav({ currentRoute, onRouteChange }) {
   const tabs = [
     {
       key: 'calendar',
       label: 'Calendar',
       materialIcon: 'today',
-      route: '/',
     },
     {
       key: 'recipes',
       label: 'Recipes',
       materialIcon: 'restaurant',
-      route: '/recipes',
     },
   ];
 
@@ -29,13 +23,7 @@ export default function BottomNav({ currentRoute }) {
         }
 
         return (
-          <button
-            onClick={() => {
-              router.push(tab.route);
-            }}
-            className={className}
-            key={tab.key}
-          >
+          <button onClick={() => onRouteChange(tab.key)} className={className} key={tab.key}>
             <div className="flex flex-col">
               <span className="material-icons">{tab.materialIcon}</span>
               <span className="text-xs">{tab.label}</span>
