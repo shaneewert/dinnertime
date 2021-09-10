@@ -32,9 +32,14 @@ export default function Home({ recipes, dinners }) {
       <Head>
         <title>Dinner Time</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
         <meta name="apple-mobile-web-app-capable" content="yes"></meta>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no"></meta>
+        <meta name="apple-mobile-web-app-title" content="Dinner Time"></meta>
       </Head>
 
       <Header title={routeToTitles[currentRoute]} />
