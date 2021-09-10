@@ -1,14 +1,19 @@
-import { HTTP } from 'http-call';
+import request from 'request';
 import DomParser from 'dom-parser';
 import decode from 'unescape';
 
 export default async function parseRecipe(req, res) {
   const maybeUrl = req.query.url;
-  try {
-    const parser = new DomParser();
 
-    const { body: html } = await HTTP.get(maybeUrl);
-    const dom = parser.parseFromString(html);
+  request(maybeUrl, (err, _res, body) => {
+    if (err) {
+      console.error('unable to parse ' + maybeUrl, err);
+      res.status(422).send('');
+      return;
+    }
+
+    const parser = new DomParser();
+    const dom = parser.parseFromString(body);
 
     const metaTags = dom.getElementsByTagName('meta');
     const ogTitle = metaTags.find((tag) => tag.getAttribute('property') == 'og:title');
@@ -18,8 +23,5 @@ export default async function parseRecipe(req, res) {
       title: decode(ogTitle.getAttribute('content')),
       imageUrl: ogImage.getAttribute('content'),
     });
-  } catch (err) {
-    console.error('unable to parse ' + maybeUrl, err);
-    res.status(422).json({});
-  }
+  });
 }
