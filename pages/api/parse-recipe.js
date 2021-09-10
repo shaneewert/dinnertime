@@ -3,16 +3,12 @@ const DomParser = require('dom-parser');
 var decode = require('unescape');
 
 export default async function parseRecipe(req, res) {
+  const maybeUrl = req.query.url;
   try {
-    const maybeUrl = req.query.url;
     const parser = new DomParser();
 
-    try {
-      const { body: html } = await HTTP.get(maybeUrl);
-      const dom = parser.parseFromString(html);
-    } catch (e) {
-      console.error('unable to fetch ' + maybeUrl, e);
-    }
+    const { body: html } = await HTTP.get(maybeUrl);
+    const dom = parser.parseFromString(html);
 
     const metaTags = dom.getElementsByTagName('meta');
     const ogTitle = metaTags.find((tag) => tag.getAttribute('property') == 'og:title');
@@ -23,6 +19,7 @@ export default async function parseRecipe(req, res) {
       imageUrl: ogImage.getAttribute('content'),
     });
   } catch (err) {
+    console.error('unable to parse ' + maybeUrl, e);
     res.status(422).json({});
   }
 }
