@@ -19,7 +19,7 @@ export default async function parseRecipe(req, res) {
       imageUrl: ogImage.getAttribute('content'),
     });
   } catch (err) {
-    console.error('unable to parse ' + maybeUrl, e);
+    console.error('unable to parse ' + maybeUrl, err);
     res.status(422).json({});
   }
 }
