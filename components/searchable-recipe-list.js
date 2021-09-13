@@ -11,8 +11,9 @@ export default function SearchableRecipeList({ initialRecipes, onRecipeClick, on
     setRenderedRecipes(initialRecipes);
   }, [initialRecipes]);
 
-  const onSearchChange = (e) => {
-    const searchTerm = e.target.value.trim().toLowerCase();
+  const onSearchChange = (newValue) => {
+    const value = newValue || '';
+    const searchTerm = value.trim().toLowerCase();
     const filteredRecipes = initialRecipes.filter((recipe) => {
       return recipe.title.toLowerCase().includes(searchTerm);
     });

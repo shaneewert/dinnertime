@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Layout from './layout';
 import LoadingOverlay from './loading-overlay';
 import NewRecipeModal from './new-recipe-modal';
 import SearchableRecipeList from './searchable-recipe-list';
 
-export default function RecipesPage({ recipes }) {
+export default function RecipesPage({ recipes, onRouteChange }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +42,7 @@ export default function RecipesPage({ recipes }) {
   };
 
   return (
-    <>
+    <Layout currentRoute={'recipes'} onRouteChange={onRouteChange}>
       {showModal && <NewRecipeModal onClose={onNewRecipeModalClose} onCreateRecipe={onNewRecipeAdded} />}
       {isLoading && <LoadingOverlay />}
       <div
@@ -51,6 +52,6 @@ export default function RecipesPage({ recipes }) {
         <span className="material-icons text-white text-3xl">add</span>
       </div>
       <SearchableRecipeList initialRecipes={recipes} onRecipeClick={onRecipeClick} onRecipeDeleted={onRecipeDeleted} />
-    </>
+    </Layout>
   );
 }

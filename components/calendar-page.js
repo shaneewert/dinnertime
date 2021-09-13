@@ -4,10 +4,11 @@ import dayjs from 'dayjs';
 import DateRow from './date-row';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Layout from './layout';
 
 const DAY = 1000 * 60 * 60 * 24;
 
-export default function CalendarPage({ recipes, dinners }) {
+export default function CalendarPage({ recipes, dinners, onRouteChange }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +73,7 @@ export default function CalendarPage({ recipes, dinners }) {
   }
 
   return (
-    <>
+    <Layout currentRoute="calendar" onRouteChange={onRouteChange}>
       {showModal && <SelectRecipeModal onClose={onCloseModal} onSelectRecipe={onRecipeSelected} recipes={recipes} />}
       {isLoading && <LoadingOverlay />}
       {days.map((day) => {
@@ -87,6 +88,6 @@ export default function CalendarPage({ recipes, dinners }) {
           />
         );
       })}
-    </>
+    </Layout>
   );
 }
