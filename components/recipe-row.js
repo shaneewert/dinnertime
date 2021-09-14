@@ -32,6 +32,8 @@ export default function RecipeRow({ recipe, onClick, onRecipeDeleted }) {
     <div
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
+      onTouchStart={onMouseDown}
+      onTouchEnd={onMouseUp}
       onClick={onRowClick}
       className="flex items-center py-2 px-4 bg-white border-b border-gray-100 cursor-pointer select-none"
     >
