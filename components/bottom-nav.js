@@ -13,9 +13,9 @@ export default function BottomNav({ currentRoute, onRouteChange }) {
   ];
 
   return (
-    <div className="bg-indigo-500 flex justify-between shadow-md h-16">
+    <div className="bg-indigo-500 flex justify-between shadow-md h-14">
       {tabs.map((tab) => {
-        let className = 'py-3 w-full hover:text-white';
+        let className = 'w-full hover:text-white';
         if (tab.key === currentRoute) {
           className += ' text-white';
         } else {
@@ -24,10 +24,9 @@ export default function BottomNav({ currentRoute, onRouteChange }) {
 
         return (
           <button onClick={() => onRouteChange(tab.key)} className={className} key={tab.key}>
-            <div className="flex flex-col">
-              <span className="material-icons">{tab.materialIcon}</span>
-              <span className="text-xs">{tab.label}</span>
-            </div>
+
+              <span className="block material-icons text-lg">{tab.materialIcon}</span>
+              <span className="block text-xs">{tab.label}</span>
           </button>
         );
       })}

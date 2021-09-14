@@ -78,7 +78,7 @@ export default function DateRow({ dayJsDate, dinner, onClick, onDinnerDeleted })
       onClick={onRowClick}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
-      className={`py-2 px-4 flex border-b border-gray-100 cursor-pointer ${bg}`}
+      className={`py-2 px-4 flex border-b border-gray-100 cursor-pointer select-none ${bg}`}
     >
       <div className="flex flex-shrink-0 flex-col items-center border border-gray-300 h-14 w-14">
         <span className="uppercase text-xs text-gray-400">{dayJsDate.format('MMM')}</span>
