@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
       url: true,
       title: true,
       imageUrl: true,
-      description: true
+      description: true,
     },
     orderBy: [
       {

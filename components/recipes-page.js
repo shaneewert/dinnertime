@@ -3,22 +3,28 @@ import { useState, useEffect } from 'react';
 import Layout from './layout';
 import LoadingOverlay from './loading-overlay';
 import NewRecipeModal from './new-recipe-modal';
+import RecipeModal from './recipe-modal';
 import SearchableRecipeList from './searchable-recipe-list';
 
 export default function RecipesPage({ recipes, onRouteChange }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [currentRecipe, setCurrentRecipe] = useState(null);
+  const [showNewRecipeModal, setShowNewRecipeModal] = useState(false);
 
   useEffect(() => setIsLoading(false), [recipes]);
 
   const addNewRecipe = () => {
-    setShowModal(true);
+    setShowNewRecipeModal(true);
   };
 
   const onNewRecipeModalClose = () => {
-    setShowModal(false);
+    setShowNewRecipeModal(false);
+  };
+
+  const onRecipeModalClose = () => {
+    setCurrentRecipe(null);
   };
 
   const onNewRecipeAdded = (recipe) => {
@@ -38,12 +44,17 @@ export default function RecipesPage({ recipes, onRouteChange }) {
   };
 
   const onRecipeClick = (recipe) => {
-    window.open(recipe.url, recipe.title);
+    if (recipe.url) {
+      window.open(recipe.url, recipe.title);
+    } else {
+      setCurrentRecipe(recipe);
+    }
   };
 
   return (
     <Layout currentRoute={'recipes'} onRouteChange={onRouteChange}>
-      {showModal && <NewRecipeModal onClose={onNewRecipeModalClose} onCreateRecipe={onNewRecipeAdded} />}
+      {showNewRecipeModal && <NewRecipeModal onClose={onNewRecipeModalClose} onCreateRecipe={onNewRecipeAdded} />}
+      {currentRecipe && <RecipeModal onClose={onRecipeModalClose} recipe={currentRecipe} />}
       {isLoading && <LoadingOverlay />}
       <div
         onClick={addNewRecipe}
@@ -51,7 +62,7 @@ export default function RecipesPage({ recipes, onRouteChange }) {
       >
         <span className="material-icons text-white text-3xl">add</span>
       </div>
-      <SearchableRecipeList initialRecipes={recipes} onRecipeClick={onRecipeClick} onRecipeDeleted={onRecipeDeleted} />
+      <SearchableRecipeList xstyle="px-4" initialRecipes={recipes} onRecipeClick={onRecipeClick} onRecipeDeleted={onRecipeDeleted} />
     </Layout>
   );
 }

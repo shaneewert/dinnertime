@@ -1,6 +1,6 @@
 import RecipeThumbnail from './recipe-thumbnail';
 
-export default function RecipeRow({ recipe, onClick, onRecipeDeleted }) {
+export default function RecipeRow({ recipe, onClick, onRecipeDeleted, xstyle }) {
   let didLongPress = false;
   let longPressTimer = null;
 
@@ -35,7 +35,7 @@ export default function RecipeRow({ recipe, onClick, onRecipeDeleted }) {
       onTouchStart={onMouseDown}
       onTouchEnd={onMouseUp}
       onClick={onRowClick}
-      className="flex items-center py-2 px-4 bg-white border-b border-gray-100 cursor-pointer select-none"
+      className={`flex items-center py-2 bg-white border-b border-gray-100 cursor-pointer select-none ${xstyle}`}
     >
       <RecipeThumbnail recipe={recipe} />
       <span className="ml-2 truncate">{recipe.title}</span>
