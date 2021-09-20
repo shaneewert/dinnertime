@@ -26,12 +26,13 @@ model User {
 }
 
 model Recipe {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  url       String?
-  title     String   @db.VarChar(255)
-  imageUrl  String?
-  dinners   Dinner[]
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  url         String?
+  title       String   @db.VarChar(255)
+  imageUrl    String?
+  dinners     Dinner[]
+  description String?
 }
 
 model Dinner {

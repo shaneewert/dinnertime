@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 export default function NewRecipeModal({ onClose, onCreateRecipe }) {
   const urlRef = useRef(null);
   const titleRef = useRef(null);
+  const directionsRef = useRef(null);
 
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,7 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
       url: urlRef.current.value,
       title: titleRef.current.value,
       imageUrl,
+      description: directionsRef.current.value,
     };
     onCreateRecipe(newRecipe);
     onClose();
@@ -32,10 +34,7 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
         if (json.title) {
           titleRef.current.value = json.title;
         }
-
-        if (json.imageUrl) {
-          setImageUrl(json.imageUrl);
-        }
+        setImageUrl(json.imageUrl);
       })
       .finally(() => setIsLoading(!hasTitle()));
   };
@@ -47,7 +46,6 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
   return (
     <Modal onClose={onClose}>
       <div>
-        <h1 className="text-xl mb-5">New Recipe</h1>
         <div className="mb-5">
           <p className="uppercase text-xs text-gray-400 mb-1">Url</p>
           <input
@@ -67,22 +65,24 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
           />
         </div>
         <div className="mb-5">
-          <p className="uppercase text-xs text-gray-400 mb-1">Image</p>
-          <div className="h-44 w-44">
-            {imageUrl ? (
-              <img className="object-cover w-full h-full" src={imageUrl} alt="Main recipe image" loading="lazy" />
-            ) : (
-              <div className="bg-gray-200 w-full h-full"></div>
-            )}
-          </div>
+          <p className="uppercase text-xs text-gray-400 mb-1">Directions</p>
+          <textarea
+            ref={directionsRef}
+            className="bg-white w-full h-24 border outline-none px-2 py-1 font-light text-gray-600 resize-none"
+          ></textarea>
         </div>
-        <button
-          onClick={onAddRecipeClick}
-          disabled={isLoading}
-          className="bg-indigo-500 w-full text-center text-white px-4 py-2 disabled:bg-indigo-300 disabled:cursor-not-allowed"
-        >
-          Add Recipe
-        </button>
+        <div className="flex justify-between items-center">
+          <button onClick={onClose} className="bg-gray-200 mr-2 w-full text-center text-gray-500 px-4 py-2">
+            Cancel
+          </button>
+          <button
+            onClick={onAddRecipeClick}
+            disabled={isLoading}
+            className="bg-indigo-500 w-full text-center text-white px-4 py-2 disabled:bg-indigo-300 disabled:cursor-not-allowed"
+          >
+            Add Recipe
+          </button>
+        </div>
       </div>
     </Modal>
   );
