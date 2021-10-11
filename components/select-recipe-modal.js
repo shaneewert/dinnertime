@@ -9,7 +9,7 @@ export default function SelectRecipeModal({ onClose, onSelectRecipe, recipes }) 
 
   return (
     <Modal onClose={onClose}>
-      <div class="pb-2">
+      <div className="pb-2">
         <SearchableRecipeList initialRecipes={recipes} onRecipeClick={onRecipeClick} xstyle="px-5" />
       </div>
     </Modal>
