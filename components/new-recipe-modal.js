@@ -1,27 +1,33 @@
 import Modal from './modal';
 import { useRef, useState } from 'react';
 
-export default function NewRecipeModal({ onClose, onCreateRecipe }) {
+export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, recipe: maybeRecipe }) {
   const urlRef = useRef(null);
   const titleRef = useRef(null);
   const directionsRef = useRef(null);
 
-  const [imageUrl, setImageUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(maybeRecipe?.imageUrl);
+  const [isLoading, setIsLoading] = useState(!maybeRecipe?.id);
 
   const hasTitle = (el) => {
     el = el || titleRef.current;
     return el.value.trim().length > 0;
   };
 
-  const onAddRecipeClick = () => {
+  const onSaveRecipeClick = () => {
     const newRecipe = {
+      id: maybeRecipe?.id,
       url: urlRef.current.value,
       title: titleRef.current.value,
       imageUrl,
       description: directionsRef.current.value,
     };
-    onCreateRecipe(newRecipe);
+    onSaveRecipe(newRecipe);
+    onClose();
+  };
+
+  const onDeleteRecipeClick = () => {
+    onDeleteRecipe(maybeRecipe);
     onClose();
   };
 
@@ -43,15 +49,40 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
     setIsLoading(!hasTitle(e.target));
   };
 
+  const maybeImage = () => {
+    if (!maybeRecipe?.imageUrl) return null;
+
+    return (
+      <img className="object-cover w-full h-44" src={maybeRecipe?.imageUrl} alt={maybeRecipe?.title} loading="lazy" />
+    );
+  };
+
+  const maybeDeleteButton = () => {
+    if (!maybeRecipe?.id) return null;
+
+    return (
+      <div className="pt-5 text-center">
+        <button
+          onClick={onDeleteRecipeClick}
+          className="tracking-wider font-bold uppercase text-xs text-center text-red-600 px-4 py-2"
+        >
+          Delete
+        </button>
+      </div>
+    );
+  };
+
   return (
     <Modal onClose={onClose}>
-      <div>
+      {maybeImage()}
+      <div className="p-5">
         <div className="mb-5">
           <p className="uppercase text-xs text-gray-400 mb-1">Url</p>
           <input
             onChange={onUrlChange}
             type="text"
             ref={urlRef}
+            defaultValue={maybeRecipe?.url}
             className="bg-white w-full border outline-none px-2 py-1 font-light text-gray-600"
           />
         </div>
@@ -61,6 +92,7 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
             onChange={onTitleChange}
             type="text"
             ref={titleRef}
+            defaultValue={maybeRecipe?.title}
             className="bg-white w-full border outline-none px-2 py-1 font-light text-gray-600"
           />
         </div>
@@ -69,20 +101,22 @@ export default function NewRecipeModal({ onClose, onCreateRecipe }) {
           <textarea
             ref={directionsRef}
             className="bg-white w-full h-24 border outline-none px-2 py-1 font-light text-gray-600 resize-none"
-          ></textarea>
+            defaultValue={maybeRecipe?.description}
+          />
         </div>
         <div className="flex justify-between items-center">
           <button onClick={onClose} className="bg-gray-200 mr-2 w-full text-center text-gray-500 px-4 py-2">
             Cancel
           </button>
           <button
-            onClick={onAddRecipeClick}
+            onClick={onSaveRecipeClick}
             disabled={isLoading}
             className="bg-indigo-500 w-full text-center text-white px-4 py-2 disabled:bg-indigo-300 disabled:cursor-not-allowed"
           >
-            Add Recipe
+            {maybeRecipe?.id ? 'Save Recipe' : 'Add Recipe'}
           </button>
         </div>
+        {maybeDeleteButton()}
       </div>
     </Modal>
   );

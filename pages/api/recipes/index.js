@@ -7,5 +7,5 @@ export default async function putRecipe(req, res) {
     data: { url, title, imageUrl, description },
   });
 
-  res.status(200).json(newRecipe);
+  res.status(201).json(newRecipe);
 }

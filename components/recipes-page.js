@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Layout from './layout';
 import LoadingOverlay from './loading-overlay';
 import NewRecipeModal from './new-recipe-modal';
-import RecipeModal from './recipe-modal';
 import SearchableRecipeList from './searchable-recipe-list';
 
 export default function RecipesPage({ recipes, onRouteChange }) {
@@ -27,16 +26,21 @@ export default function RecipesPage({ recipes, onRouteChange }) {
     setCurrentRecipe(null);
   };
 
-  const onNewRecipeAdded = (recipe) => {
+  const onSaveRecipe = (recipe) => {
     setIsLoading(true);
-    fetch('/api/recipes', {
-      method: 'PUT',
+
+    const isNewRecipe = !recipe.id;
+    const method = isNewRecipe ? 'POST' : 'PUT';
+    const url = isNewRecipe ? `/api/recipes` : `/api/recipes/${recipe.id}`;
+
+    fetch(url, {
+      method: method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(recipe),
     }).then(() => router.replace(router.asPath));
   };
 
-  const onRecipeDeleted = (recipe) => {
+  const onDeleteRecipe = (recipe) => {
     setIsLoading(true);
     fetch('/api/recipes/' + recipe.id, {
       method: 'DELETE',
@@ -44,17 +48,20 @@ export default function RecipesPage({ recipes, onRouteChange }) {
   };
 
   const onRecipeClick = (recipe) => {
-    if (recipe.url) {
-      window.open(recipe.url, recipe.title);
-    } else {
-      setCurrentRecipe(recipe);
-    }
+    setCurrentRecipe(recipe);
   };
 
   return (
     <Layout currentRoute={'recipes'} onRouteChange={onRouteChange}>
-      {showNewRecipeModal && <NewRecipeModal onClose={onNewRecipeModalClose} onCreateRecipe={onNewRecipeAdded} />}
-      {currentRecipe && <RecipeModal onClose={onRecipeModalClose} recipe={currentRecipe} />}
+      {showNewRecipeModal && <NewRecipeModal onClose={onNewRecipeModalClose} onSaveRecipe={onSaveRecipe} />}
+      {currentRecipe && (
+        <NewRecipeModal
+          onClose={onRecipeModalClose}
+          onSaveRecipe={onSaveRecipe}
+          onDeleteRecipe={onDeleteRecipe}
+          recipe={currentRecipe}
+        />
+      )}
       {isLoading && <LoadingOverlay />}
       <div
         onClick={addNewRecipe}
@@ -62,7 +69,7 @@ export default function RecipesPage({ recipes, onRouteChange }) {
       >
         <span className="material-icons text-white text-3xl">add</span>
       </div>
-      <SearchableRecipeList xstyle="px-4" initialRecipes={recipes} onRecipeClick={onRecipeClick} onRecipeDeleted={onRecipeDeleted} />
+      <SearchableRecipeList xstyle="px-4" initialRecipes={recipes} onRecipeClick={onRecipeClick} />
     </Layout>
   );
 }
