@@ -70,12 +70,12 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
   };
 
   const maybeGoToWebsiteButton = () => {
-    if (!maybeRecipe?.id) return null;
+    if (!maybeRecipe?.url) return null;
 
     return (
       <button
         onClick={() => {
-          window.open(maybeRecipe?.url);
+          window.open(maybeRecipe.url);
         }}
         className="bg-gray-200 w-16 material-icons"
       >
