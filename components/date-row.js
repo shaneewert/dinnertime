@@ -8,7 +8,6 @@ export default function DateRow({ dayJsDate, dinner, onClick, onDinnerDeleted })
 
   const today = dayjs().startOf('day');
   const beforeToday = dayJsDate.isBefore(today);
-  const yesterday = beforeToday && dayJsDate.isAfter(today.subtract(2, 'day'));
 
   let bg = 'bg-white';
   let fg = 'text-gray-800;';
@@ -38,12 +37,6 @@ export default function DateRow({ dayJsDate, dinner, onClick, onDinnerDeleted })
       return <span className="truncate italic font-light text-gray-400">Add recipe</span>;
     }
   };
-
-  // default scroll position puts yesterday at the top of the list
-  if (yesterday) {
-    // ref.current is not guaranteed to be non null
-    setTimeout(() => ref.current && ref.current.scrollIntoView(true));
-  }
 
   let didLongPress = false;
   let longPressTimer = null;
