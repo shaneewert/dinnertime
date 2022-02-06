@@ -27,7 +27,7 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
   };
 
   const onDeleteRecipeClick = () => {
-    if (confirm('Are you sure?')) {
+    if (confirm('Are you sure you want to delete this recipe?')) {
       onDeleteRecipe(maybeRecipe);
       onClose();
     }
