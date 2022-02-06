@@ -27,8 +27,10 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
   };
 
   const onDeleteRecipeClick = () => {
-    onDeleteRecipe(maybeRecipe);
-    onClose();
+    if (confirm('Are you sure?')) {
+      onDeleteRecipe(maybeRecipe);
+      onClose();
+    }
   };
 
   const onUrlChange = (e) => {
@@ -61,14 +63,24 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
     if (!maybeRecipe?.id) return null;
 
     return (
-      <div className="pt-5 text-center">
-        <button
-          onClick={onDeleteRecipeClick}
-          className="tracking-wider font-bold uppercase text-xs text-center text-red-600 px-4 py-2"
-        >
-          Delete
-        </button>
-      </div>
+      <button onClick={onDeleteRecipeClick} className="bg-red-100 mr-2 w-full text-center text-red-800 px-4 py-2">
+        Delete
+      </button>
+    );
+  };
+
+  const maybeGoToWebsiteButton = () => {
+    if (!maybeRecipe?.id) return null;
+
+    return (
+      <button
+        onClick={() => {
+          window.open(maybeRecipe?.url);
+        }}
+        className="bg-gray-200 w-16 material-icons"
+      >
+        launch
+      </button>
     );
   };
 
@@ -79,13 +91,16 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
       <div className="p-5">
         <div className="mb-5">
           <p className="uppercase text-xs text-gray-400 mb-1">Url</p>
-          <input
-            onChange={onUrlChange}
-            type="text"
-            ref={urlRef}
-            defaultValue={maybeRecipe?.url}
-            className="bg-white w-full border outline-none px-2 py-1 font-light text-gray-600"
-          />
+          <div className="flex">
+            <input
+              onChange={onUrlChange}
+              type="text"
+              ref={urlRef}
+              defaultValue={maybeRecipe?.url}
+              className="bg-white w-full border outline-none px-2 py-1 font-light text-gray-600"
+            />
+            {maybeGoToWebsiteButton()}
+          </div>
         </div>
         <div className="mb-5">
           <p className="uppercase text-xs text-gray-400 mb-1">Title</p>
@@ -106,9 +121,7 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
           />
         </div>
         <div className="flex justify-between items-center">
-          <button onClick={onClose} className="bg-gray-200 mr-2 w-full text-center text-gray-500 px-4 py-2">
-            Cancel
-          </button>
+          {maybeDeleteButton()}
           <button
             onClick={onSaveRecipeClick}
             disabled={isLoading}
@@ -117,7 +130,6 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
             {maybeRecipe?.id ? 'Save Recipe' : 'Add Recipe'}
           </button>
         </div>
-        {maybeDeleteButton()}
       </div>
     </Modal>
   );
