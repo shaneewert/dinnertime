@@ -65,7 +65,7 @@ export default function RecipesPage({ recipes, onRouteChange }) {
       {isLoading && <LoadingOverlay />}
       <div
         onClick={addNewRecipe}
-        className="bg-indigo-500 rounded-full h-14 w-14 fixed z-20 bottom-0 right-0 mb-20 mr-4 shadow-lg flex items-center justify-center cursor-pointer"
+        className="bg-indigo-500 rounded-full h-14 w-14 fixed z-10 bottom-0 right-0 mb-20 mr-4 shadow-lg flex items-center justify-center cursor-pointer"
       >
         <span className="material-icons text-white text-3xl">add</span>
       </div>

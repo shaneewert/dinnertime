@@ -72,8 +72,9 @@ export default function NewRecipeModal({ onClose, onSaveRecipe, onDeleteRecipe, 
     );
   };
 
+  const tile = maybeRecipe?.title || 'New Recipe';
   return (
-    <Modal onClose={onClose}>
+    <Modal title={tile} onClose={onClose}>
       {maybeImage()}
       <div className="p-5">
         <div className="mb-5">
